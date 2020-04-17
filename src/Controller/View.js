@@ -19,21 +19,22 @@ class View extends React.Component {
            selected : false,
             rows: [],
             selectval : '' ,
-            typestyle : "hidden"
+            typestyle : "hidden",
+            weight : '',
+            temp: '',
+            bp : ''
+
 				}  
          this.handleChange = this.handleChange.bind(this); 
 
 		  } 
       
   
-    handleSubmitMed = (e) => {
-    let name = e.target.name; 
+    handleSubmitMed = (e) => { 
     this.setState((prevState, props) => {
-    let deleterow = []
-       console.log([...prevState.rows]);
-    
-    console.log([...prevState.rows]);
-      return { rows:deleterow};
+
+    let deleterow = [] 
+      return { rows:deleterow , weight: '',temp : '', bp : ''};
     });
   }; 
 
@@ -41,13 +42,20 @@ class View extends React.Component {
     let val = e.target.value; 
    this.setState({val,selected : false});
    if(val.length >1 )
-   axios.get(`https://jsonplaceholder.typicode.com/users?id=2`)
+   axios.get(`https://jsonplaceholder.typicode.com/posts?title_like=${val}`)
       .then(res => {
         var values = res.data; 
         this.setState({ values });
       })
 
   }
+handleSub = (e) => {
+    let name = e.target.name;
+    let subVal = e.target.value; 
+    this.setState({[name]: subVal});
+     
+        //this.setState({rows[0] : subVal}); 
+}
 
   handleAddRow = () => {  
     this.setState((prevState, props , index) => {
@@ -71,7 +79,7 @@ class View extends React.Component {
         let value = e.target.value;  
         let id = e.target.id;  
         let arrayindex = e.target.name; 
-        if(value == "false"){
+        if(value === "false"){
           value = true 
         }
         else{ 
@@ -131,11 +139,7 @@ class View extends React.Component {
     const addStyletable = { 
       visibility :  this.state.rows.length >0  ? 'visible' : 'hidden' 
     }; 
- 
-  const addMTStyle = { 
-
-      visibility :  this.state.typestyle 
-    }; 
+  
  
     return(
     	<div className="container">  
@@ -176,19 +180,19 @@ class View extends React.Component {
                                   <div className="input-group-prepend input-sm">
                                     <div className="input-group-text input-sm">Weight</div>
                                     </div>
-                                  <input type="text" className="form-control input-sm" id="weight" name="weight"   required />
+                                  <input type="text" className="form-control input-sm" id="weight" value={this.state.weight}  onChange={this.handleSub} name="weight"   required />
                             </div>
                             <div className="input-group mb-2">
                                   <div className="input-group-prepend">
                                     <div className="input-group-text">Temp</div>
                                     </div>
-                                  <input type="text" className="form-control" id="temp" name="temp"   required />
+                                  <input type="text" className="form-control" id="temp" value={this.state.temp}  onChange={this.handleSub}  name="temp"   required />
                             </div>
                             <div className="input-group mb-2">
                                   <div className="input-group-prepend">
                                     <div className="input-group-text">BP</div>
                                     </div>
-                                  <input type="text" className="form-control" id="bp" name="bp"   required />
+                                  <input type="text" className="form-control" id="bp" value={this.state.bp}  onChange={this.handleSub}  name="bp"   required />
                             </div>
                              
                         </div>
@@ -203,7 +207,7 @@ class View extends React.Component {
                          <Autocomplete inputProps={{ placeholder: 'Search Medicines' }}
                           value={this.state.val} name="val"
                           items= {this.state.values}
-                          getItemValue={item => item.name}
+                          getItemValue={item => item.title}
                           shouldItemRender={ renderMovieTitle}
                           renderMenu={item => (
                             <div className="dropdown" style={divStyle}>
@@ -213,7 +217,7 @@ class View extends React.Component {
                         renderItem={(item, isHighlighted) =>
 
                             <div key={item.id} className={`item ${isHighlighted ? 'selected-item' : ''}`}>
-                             {item.name !== "" ? item.name: 'No data found'}
+                             {item.title !== "" ? item.title: 'No data found'}
                             </div> 
                         }
                            onChange={this.handleChange}
@@ -297,7 +301,7 @@ class View extends React.Component {
                                           <div className="form-check">
                                             <input className="form-check-input" type="checkbox" value={row.content[9]} checked={row.content[9]} onChange={this.handleCheckbox}  id="9" name={index} />
                                             <label className="form-check-label" htmlFor="defaultCheck1">
-                                             EVNG
+                                             Evng
                                             </label>
                                           </div>
                                           <div className="form-check">
@@ -336,7 +340,7 @@ class View extends React.Component {
 } 
 export function renderMovieTitle(state, val) {
     return (
-        state.name.toLowerCase().indexOf(val.toLowerCase()) !== -1
+        state.title.toLowerCase().indexOf(val.toLowerCase()) !== -1
     );
 }
 
