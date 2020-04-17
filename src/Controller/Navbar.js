@@ -13,7 +13,9 @@ class Navbar extends React.Component{
     	let button; 
     	if (isLoggedIn != null) {
 	      button = <div className="collapse navbar-collapse" id="navbarSupportedContent">
+	      <p className="text-capitalize font-weight-bold m-3 text-success" >Welcome {this.state.login}</p>
 			            <ul className="navbar-nav ml-auto">
+			             
 			            	<li className="nav-item">
 			                    <Link className="nav-link text-white" to="/User">Book Appointment</Link>
 			                </li>
@@ -33,7 +35,7 @@ class Navbar extends React.Component{
 
 	      <header className="App-header">
 	        <div className="Mainapp">
-	        <nav className="navbar navbar-expand-lg navbar-light navbar-laravel bg-default">
+	        <nav className="navbar navbar-expand-lg navbar-light navbar-laravel bg-dark">
 			    <div className="container">
 
 			        <Link className="navbar-brand text-danger" to="/">Sample App</Link >
